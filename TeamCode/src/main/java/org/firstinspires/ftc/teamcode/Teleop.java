@@ -17,6 +17,7 @@ public class Teleop extends LinearOpMode {
         telemetry.update();
 
         Odometry odometry = new Odometry();
+        odometry.initializeOdometry(hardwareMap);
 
         waitForStart();
 
@@ -70,35 +71,20 @@ public class Teleop extends LinearOpMode {
             // Run the PID every loop
             Armsubsystem.update();
 
+            // Run odometry every loop
+            odometry.updateOdometry();
+
             // Telemetry
             telemetry.addData("Target", Armsubsystem.getTargetPosition());
             telemetry.addData("Current", Armsubsystem.getCurrentPosition());
             telemetry.addData("Power", Armsubsystem.getPower());
 
+            telemetry.addData("X Position", odometry.getxPos());
+            telemetry.addData("Y Position", odometry.getyPos());
+            telemetry.addData("Heading", odometry.getHeading());
+
             telemetry.update();
 
-
-            Odometry odometry = new Odometry();
-
-            @Override
-            public void runOpMode() {
-
-                odometry.initializeOdometry(hardwareMap);
-
-                waitForStart();
-
-                while (opModeIsActive()) {
-                    odometry.updateOdometry();
-
-                    //report data to telemetry
-                    telemetry.addData("x Position", odometry.getxPos());
-                    telemetry.addData("y Position", odometry.getyPos());
-                    telemetry.addData("Heading", odometry.getHeading());
-
-                    //communicate to driver through telemetry
-                    telemetry.update();
-
-                }
         }
     }
-}}
+}
