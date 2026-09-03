@@ -16,6 +16,8 @@ public class Teleop extends LinearOpMode {
         telemetry.addLine("Ready!");
         telemetry.update();
 
+        Odometry odometry = new Odometry();
+
         waitForStart();
 
         boolean clawOpen = false;
