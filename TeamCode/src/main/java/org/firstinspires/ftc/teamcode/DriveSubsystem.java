@@ -9,8 +9,11 @@ public class DriveSubsystem {
     private DcMotor BR;
     private DcMotor FL;
     private DcMotor FR;
+    private Odometry odometry;
 
-    public DriveSubsystem(HardwareMap hardwareMap) {
+    public DriveSubsystem(HardwareMap hardwareMap, Odometry odometry) {
+
+        this.odometry = odometry;
 
         BL = hardwareMap.get(DcMotor.class, "BL");
         BR = hardwareMap.get(DcMotor.class, "BR");
@@ -31,10 +34,33 @@ public class DriveSubsystem {
         // If you hold X it turns on the slowMode
         double speed = slowMode ? 0.25 : 1.0;
 
-        double flPower = (forward + strafe + turn) * speed;
-        double frPower = (forward - strafe - turn) * speed;
-        double blPower = (forward - strafe + turn) * speed;
-        double brPower = (forward + strafe - turn) * speed;
+        double heading = Math.toRadians(odometry.getHeading());
+        double rotatedForward = forward * Math.cos(heading) + strafe * Math.sin(heading);
+        double rotatedStrafe = -forward * Math.sin(heading) + strafe * Math.cos(heading);
+
+        double flPower = (rotatedForward + rotatedStrafe + turn) * speed;
+        double frPower = (rotatedForward - rotatedStrafe - turn) * speed;
+        double blPower = (rotatedForward - rotatedStrafe + turn) * speed;
+        double brPower = (rotatedForward + rotatedStrafe - turn) * speed;
+
+        double maxPower = Math.max(
+                1.0,
+                Math.max(
+                        Math.abs(flPower),
+                        Math.max(
+                                Math.abs(frPower),
+                                Math.max(
+                                        Math.abs(blPower),
+                                        Math.abs(brPower)
+                                )
+                        )
+                )
+        );
+
+        flPower /=maxPower;
+        frPower /= maxPower;
+        blPower/= maxPower;
+        brPower /= maxPower;
 
         FL.setPower(flPower);
         FR.setPower(frPower);

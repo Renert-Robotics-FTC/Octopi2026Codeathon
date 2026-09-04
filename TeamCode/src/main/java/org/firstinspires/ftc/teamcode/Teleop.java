@@ -11,13 +11,14 @@ public class Teleop extends LinearOpMode {
 
         ArmSubsystem Armsubsystem = new ArmSubsystem(hardwareMap);
         ClawSubsystem clawSubsystem = new ClawSubsystem(hardwareMap);
-        DriveSubsystem driveSubsystem = new DriveSubsystem(hardwareMap);
-
-        telemetry.addLine("Ready!");
-        telemetry.update();
 
         Odometry odometry = new Odometry();
         odometry.initializeOdometry(hardwareMap);
+
+        DriveSubsystem driveSubsystem = new DriveSubsystem(hardwareMap, odometry);
+
+        telemetry.addLine("Ready!");
+        telemetry.update();
 
         waitForStart();
 
