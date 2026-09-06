@@ -48,11 +48,11 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.b) {
-                Armsubsystem.setTargetPosition(500);
+                Armsubsystem.setTargetPosition(1065);
             }
 
             if (gamepad1.y) {
-                Armsubsystem.setTargetPosition(1000);
+                Armsubsystem.setTargetPosition(1900);
             }
 
             // Left bumper controls the claw
