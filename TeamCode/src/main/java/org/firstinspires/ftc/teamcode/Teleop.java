@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(name = "Main TeleOp")
 public class Teleop extends LinearOpMode {
@@ -16,6 +17,8 @@ public class Teleop extends LinearOpMode {
         odometry.initializeOdometry(hardwareMap);
 
         DriveSubsystem driveSubsystem = new DriveSubsystem(hardwareMap, odometry);
+
+        AprilTagScanner aprilTagScanner = new AprilTagScanner(hardwareMap);
 
         telemetry.addLine("Ready!");
         telemetry.update();
@@ -84,7 +87,19 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Y Position", odometry.getyPos());
             telemetry.addData("Heading", odometry.getHeading());
 
+            telemetry.addData("AprilTags", aprilTagScanner.getNumberOfDetections());
+            telemetry.addData("Tag ID", aprilTagScanner.getTagID());
+            telemetry.addData("Tag X", aprilTagScanner.getTagX());
+            telemetry.addData("Tag Y", aprilTagScanner.getTagY());
+            telemetry.addData("Tag Z", aprilTagScanner.getTagZ());
+            telemetry.addData("Tag Range", aprilTagScanner.getTagRange());
+            telemetry.addData("Tag Bearing", aprilTagScanner.getTagBearing());
+            telemetry.addData("Tag Yaw", aprilTagScanner.getTagYaw());
+
             telemetry.update();
+
+            // Find Tag 20
+            AprilTagDetection tag = aprilTagScanner.getTag(20);
 
         }
     }
