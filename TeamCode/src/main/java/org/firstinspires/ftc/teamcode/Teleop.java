@@ -87,19 +87,23 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Y Position", odometry.getyPos());
             telemetry.addData("Heading", odometry.getHeading());
 
-            telemetry.addData("AprilTags", aprilTagScanner.getNumberOfDetections());
-            telemetry.addData("Tag ID", aprilTagScanner.getTagID());
-            telemetry.addData("Tag X", aprilTagScanner.getTagX());
-            telemetry.addData("Tag Y", aprilTagScanner.getTagY());
-            telemetry.addData("Tag Z", aprilTagScanner.getTagZ());
-            telemetry.addData("Tag Range", aprilTagScanner.getTagRange());
-            telemetry.addData("Tag Bearing", aprilTagScanner.getTagBearing());
-            telemetry.addData("Tag Yaw", aprilTagScanner.getTagYaw());
+            // Scanning the first tag
+            AprilTagDetection tag = aprilTagScanner.getFirstDetection();
+
+            if (tag != null) {
+                telemetry.addData("AprilTags", aprilTagScanner.getNumberOfDetections());
+                telemetry.addData("Tag ID", aprilTagScanner.getTagID());
+                telemetry.addData("Tag X", aprilTagScanner.getTagX(tag));
+                telemetry.addData("Tag Y", aprilTagScanner.getTagY(tag));
+                telemetry.addData("Tag Z", aprilTagScanner.getTagZ(tag));
+                telemetry.addData("Tag Range", aprilTagScanner.getTagRange(tag));
+                telemetry.addData("Tag Bearing", aprilTagScanner.getTagBearing(tag));
+                telemetry.addData("Tag Yaw", aprilTagScanner.getTagYaw(tag));
+            } else {
+                telemetry.addData("AprilTag", "No tag detected");
+            }
 
             telemetry.update();
-
-            // Find Tag 20
-            AprilTagDetection tag = aprilTagScanner.getTag(20);
 
         }
     }
