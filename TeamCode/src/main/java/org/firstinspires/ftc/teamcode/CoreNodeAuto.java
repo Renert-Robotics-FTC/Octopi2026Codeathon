@@ -9,6 +9,10 @@ public class CoreNodeAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        ArmSubsystem Armsubsystem = new ArmSubsystem(hardwareMap);
+
+        int selectedTagID = 1;
+
         Odometry odometry = new Odometry();
         odometry.initializeOdometry(hardwareMap);
 
@@ -35,13 +39,33 @@ public class CoreNodeAuto extends LinearOpMode {
 
             telemetry.addData(
                     "Target Distance",
-                    Constants.DriveConstants.NODE_DISTANCE
+                    Constants.DriveConstants.CORE_DISTANCE
             );
 
             telemetry.addData(
                     "AprilTags",
                     aprilTagScanner.getNumberOfDetections()
             );
+
+            boolean aligned = driveSubsystem.alignToAprilTag(
+                    aprilTagScanner,
+                    1,
+                    Constants.DriveConstants.NODE_DISTANCE
+            );
+
+            if (aligned) {
+
+                if (selectedTagID == 1) {
+                    Armsubsystem.setTargetPosition(
+                            Constants.ArmConstants.ARM_NODE_POSITION
+                    );
+
+                } else if (selectedTagID == 2) {
+                    Armsubsystem.setTargetPosition(
+                            Constants.ArmConstants.ARM_CORE_POSITION
+                    );
+                }
+            }
 
             telemetry.update();
         }

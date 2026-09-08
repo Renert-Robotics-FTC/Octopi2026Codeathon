@@ -65,7 +65,7 @@ public class DriveSubsystem {
         BR.setPower(brPower);
     }
 
-    public void alignToAprilTag(
+    public boolean alignToAprilTag(
             AprilTagScanner aprilTagScanner,
             int targetID,
             double targetDistance
@@ -76,7 +76,7 @@ public class DriveSubsystem {
         // No target tag found
         if (tag == null) {
             drive(0, 0, 0);
-            return;
+            return false;
         }
 
         // Get tag information
@@ -124,6 +124,18 @@ public class DriveSubsystem {
         turn = Math.max(-1, Math.min(1, turn));
         forward = Math.max(-1, Math.min(1, forward));
 
+        boolean aligned =
+                Math.abs(strafeError) < Constants.DriveConstants.X_TOLERANCE
+                        && Math.abs(turnError) < Constants.DriveConstants.BEARING_TOLERANCE
+                        && Math.abs(distanceError) < Constants.DriveConstants.DISTANCE_TOLERANCE;
+
+        if (aligned) {
+            drive(0, 0, 0);
+            return true;
+        }
+
         drive(forward, strafe, turn);
+
+        return false;
     }
 }
