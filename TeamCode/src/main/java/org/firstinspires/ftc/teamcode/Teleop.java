@@ -38,12 +38,23 @@ public class Teleop extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
 
             // Slow mode: hold X
-            driveSubsystem.drive(
-                    forward,
-                    strafe,
-                    turn,
-                    gamepad1.x
-            );
+            if (gamepad1.right_bumper) {
+
+                driveSubsystem.alignToAprilTag(
+                        aprilTagScanner,
+                        20,
+                        24.0
+                );
+
+            } else {
+
+                driveSubsystem.drive(
+                        forward,
+                        strafe,
+                        turn,
+                        gamepad1.x
+                );
+            }
 
             // Preset Positions
             if (gamepad1.a) {
