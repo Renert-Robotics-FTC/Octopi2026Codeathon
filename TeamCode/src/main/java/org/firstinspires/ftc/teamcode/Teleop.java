@@ -53,10 +53,10 @@ public class Teleop extends LinearOpMode {
                 double targetDistance;
 
                 if (selectedTagID == 1) {
-                    targetDistance = 67;
+                    targetDistance = Constants.DriveConstants.NODE_DISTANCE;
 
                 } else {
-                    targetDistance = 40;
+                    targetDistance = Constants.DriveConstants.CORE_DISTANCE;
                 }
 
                 driveSubsystem.alignToAprilTag(
@@ -82,15 +82,15 @@ public class Teleop extends LinearOpMode {
             if (!gamepad1.right_bumper) {
 
                 if (gamepad1.a) {
-                    Armsubsystem.setTargetPosition(0);
+                    Armsubsystem.setTargetPosition(Constants.ArmConstants.ARM_INTAKE_POSITION);
                 }
 
                 if (gamepad1.b) {
-                    Armsubsystem.setTargetPosition(1065);
+                    Armsubsystem.setTargetPosition(Constants.ArmConstants.ARM_NODE_POSITION);
                 }
 
                 if (gamepad1.y) {
-                    Armsubsystem.setTargetPosition(1900);
+                    Armsubsystem.setTargetPosition(Constants.ArmConstants.ARM_CORE_POSITION);
                 }
             }
 
@@ -134,7 +134,7 @@ public class Teleop extends LinearOpMode {
                 telemetry.addData("Tag Z", aprilTagScanner.getTagZ(tag));
                 telemetry.addData("Tag Range", aprilTagScanner.getTagRange(tag));
                 telemetry.addData("Tag Bearing", aprilTagScanner.getTagBearing(tag));
-                telemetry.addData("Tag Yaw", aprilTagScanner.getTagYaw(tag));
+                telemetry.addData("Tag Yaw", aprilTagScanner.getTagYaw());
             } else {
                 telemetry.addData("AprilTag", "No tag detected");
             }

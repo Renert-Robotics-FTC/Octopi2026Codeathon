@@ -83,15 +83,6 @@ public class DriveSubsystem {
             return;
         }
 
-        // Practice values — tune these later
-        double STRAFE_KP = 0.03;
-        double TURN_KP = 0.02;
-        double DRIVE_KP = 0.03;
-
-        double X_TOLERANCE = 1.0;        // inches
-        double BEARING_TOLERANCE = 3.0;  // degrees
-        double DISTANCE_TOLERANCE = 2.0; // inches
-
         // Get tag information
         double x = tag.rawPose.x;
         double y = tag.rawPose.y;
@@ -101,26 +92,26 @@ public class DriveSubsystem {
         // Distance from camera to tag
         double distance = Math.hypot(x, y);
 
-        // Calculate errors
         double strafeError = x;
         double turnError = bearing;
         double distanceError = distance - targetDistance;
 
-        // Calculate movement
-        double strafe = strafeError * STRAFE_KP;
-        double turn = turnError * TURN_KP;
-        double forward = distanceError * DRIVE_KP;
+        // Calculate errors
+
+        double strafe = strafeError * Constants.DriveConstants.STRAFE_KP;
+        double turn = turnError * Constants.DriveConstants.TURN_KP;
+        double forward = distanceError * Constants.DriveConstants.DRIVE_KP;
 
         // Stop individual movements when they're close enough
-        if (Math.abs(strafeError) < X_TOLERANCE) {
+        if (Math.abs(strafeError) < Constants.DriveConstants.X_TOLERANCE) {
             strafe = 0;
         }
 
-        if (Math.abs(turnError) < BEARING_TOLERANCE) {
+        if (Math.abs(turnError) < Constants.DriveConstants.BEARING_TOLERANCE) {
             turn = 0;
         }
 
-        if (Math.abs(distanceError) < DISTANCE_TOLERANCE) {
+        if (Math.abs(distanceError) < Constants.DriveConstants.DISTANCE_TOLERANCE) {
             forward = 0;
         }
 

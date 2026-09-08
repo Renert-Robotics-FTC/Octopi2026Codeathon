@@ -223,21 +223,4 @@ public class AprilTagScanner {
 
         return 0;
     }
-
-    public double getTagYaw(AprilTagDetection detection) {
-
-        if (detection != null) {
-
-            Orientation rot = Orientation.getOrientation(
-                    detection.rawPose.R,
-                    AxesReference.INTRINSIC,
-                    AxesOrder.YXZ,
-                    AngleUnit.DEGREES
-            );
-
-            return -rot.firstAngle;
-        }
-
-        return 0;
-    }
 }

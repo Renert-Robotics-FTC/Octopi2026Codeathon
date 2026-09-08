@@ -14,9 +14,9 @@ public class ArmSubsystem {
 
         // PID settings
         armPID = new PIDController(
-                0.01,
-                0,
-                0.0005
+                Constants.ArmConstants.ARM_KP,
+                Constants.ArmConstants.ARM_KI,
+                Constants.ArmConstants.ARM_KD
         );
     }
 
