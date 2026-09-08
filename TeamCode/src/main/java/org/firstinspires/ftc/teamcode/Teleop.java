@@ -38,43 +38,6 @@ public class Teleop extends LinearOpMode {
             double strafe = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            // Slow mode: hold X
-            // Auto-align with Right Bumper
-            if (gamepad1.right_bumper) {
-
-                if (gamepad1.a) {
-                    selectedTagID = 1;
-                }
-
-                if (gamepad1.b) {
-                    selectedTagID = 2;
-                }
-
-                double targetDistance;
-
-                if (selectedTagID == 1) {
-                    targetDistance = Constants.DriveConstants.NODE_DISTANCE;
-
-                } else {
-                    targetDistance = Constants.DriveConstants.CORE_DISTANCE;
-                }
-
-                driveSubsystem.alignToAprilTag(
-                        aprilTagScanner,
-                        selectedTagID,
-                        targetDistance
-                );
-
-
-            } else {
-
-                driveSubsystem.drive(
-                        forward,
-                        strafe,
-                        turn
-                );
-            }
-
             // Preset Positions
             if (gamepad1.a) {
                 Armsubsystem.setTargetPosition(

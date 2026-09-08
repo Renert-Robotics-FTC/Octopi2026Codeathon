@@ -88,26 +88,34 @@ public class DriveSubsystem {
         // Distance from camera to tag
         double distance = Math.hypot(x, y);
 
+        // Calculate errors
         double strafeError = x;
         double turnError = bearing;
         double distanceError = distance - targetDistance;
 
-        // Calculate errors
+        // Calculate movement
+        double strafe =
+                strafeError * Constants.DriveConstants.STRAFE_KP;
 
-        double strafe = strafeError * Constants.DriveConstants.STRAFE_KP;
-        double turn = turnError * Constants.DriveConstants.TURN_KP;
-        double forward = distanceError * Constants.DriveConstants.DRIVE_KP;
+        double turn =
+                turnError * Constants.DriveConstants.TURN_KP;
 
-        // Stop individual movements when they're close enough
-        if (Math.abs(strafeError) < Constants.DriveConstants.X_TOLERANCE) {
+        double forward =
+                distanceError * Constants.DriveConstants.DRIVE_KP;
+
+        // Stop individual movements when close enough
+        if (Math.abs(strafeError)
+                < Constants.DriveConstants.X_TOLERANCE) {
             strafe = 0;
         }
 
-        if (Math.abs(turnError) < Constants.DriveConstants.BEARING_TOLERANCE) {
+        if (Math.abs(turnError)
+                < Constants.DriveConstants.BEARING_TOLERANCE) {
             turn = 0;
         }
 
-        if (Math.abs(distanceError) < Constants.DriveConstants.DISTANCE_TOLERANCE) {
+        if (Math.abs(distanceError)
+                < Constants.DriveConstants.DISTANCE_TOLERANCE) {
             forward = 0;
         }
 
