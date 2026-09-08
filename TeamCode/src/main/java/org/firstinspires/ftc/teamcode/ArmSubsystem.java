@@ -2,30 +2,27 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-public class ArmSubSystem {
+public class ArmSubsystem {
     private DcMotor armMotor;
     private double target = 0;
     private final double kP = 0.05;
 
-    private final int intakePos=0;
-    private final int corePos=1065;
-    private final int nodePos=1900;
 
-    public void ArmSubsystem(HardwareMap hardwareMap) {
+    public ArmSubsystem(HardwareMap hardwareMap) {
 
         armMotor = hardwareMap.get(DcMotor.class, "arm");
 
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     public void setIntakeTarget() {
-        target = intakePos;
+        target = Constants.ArmConstants.ARM_INTAKE_POSITION;
     }
     public void setCoreTarget() {
-        target = corePos;
+        target = Constants.ArmConstants.ARM_CORE_POSITION;
     }
     public void setNodeTarget() {
-        target = nodePos;
+        target = Constants.ArmConstants.ARM_NODE_POSITION;
     }
 
     public void updatePower() {
