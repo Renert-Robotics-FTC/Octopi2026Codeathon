@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Intake {
 
-    public boolean intakeFlag=true;
+    public static boolean intakeFlag=true;
     private DcMotor intakeMotor;
     public Intake(HardwareMap hardwareMap) {
 
