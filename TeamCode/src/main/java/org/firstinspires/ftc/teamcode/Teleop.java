@@ -12,6 +12,7 @@ public class Teleop extends LinearOpMode {
 
         ArmSubsystem Armsubsystem = new ArmSubsystem(hardwareMap);
         ClawSubsystem clawSubsystem = new ClawSubsystem(hardwareMap);
+        int selectedTagID = 1;
 
         Odometry odometry = new Odometry();
         odometry.initializeOdometry(hardwareMap);
@@ -38,13 +39,32 @@ public class Teleop extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
 
             // Slow mode: hold X
+            // Auto-align with Right Bumper
             if (gamepad1.right_bumper) {
+
+                if (gamepad1.a) {
+                    selectedTagID = 1;
+                }
+
+                if (gamepad1.b) {
+                    selectedTagID = 2;
+                }
+
+                double targetDistance;
+
+                if (selectedTagID == 1) {
+                    targetDistance = 67;
+
+                } else {
+                    targetDistance = 40;
+                }
 
                 driveSubsystem.alignToAprilTag(
                         aprilTagScanner,
-                        20,
-                        24.0
+                        selectedTagID,
+                        targetDistance
                 );
+
 
             } else {
 
@@ -57,16 +77,21 @@ public class Teleop extends LinearOpMode {
             }
 
             // Preset Positions
-            if (gamepad1.a) {
-                Armsubsystem.setTargetPosition(0);
-            }
+            //This ensures that if the right_bumper is pressed, it doesn't follow through with the other arm settings.
+            //This stops it from doing it all at once.
+            if (!gamepad1.right_bumper) {
 
-            if (gamepad1.b) {
-                Armsubsystem.setTargetPosition(1065);
-            }
+                if (gamepad1.a) {
+                    Armsubsystem.setTargetPosition(0);
+                }
 
-            if (gamepad1.y) {
-                Armsubsystem.setTargetPosition(1900);
+                if (gamepad1.b) {
+                    Armsubsystem.setTargetPosition(1065);
+                }
+
+                if (gamepad1.y) {
+                    Armsubsystem.setTargetPosition(1900);
+                }
             }
 
             // Left bumper controls the claw
