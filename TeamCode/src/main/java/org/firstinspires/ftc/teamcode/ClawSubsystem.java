@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class ClawSubsystem {
 
+    //THIS IS ONLY USED FOR THE SWITCH. ONLY USED ONCE PER GAME.
+    //THIS DOES NOT COUNT TOWARDS THE BUTTON CYCLE LIMIT
     private Servo claw;
 
     // Change these values after testing, they determine the position of the claw

@@ -29,20 +29,16 @@ public class DriveSubsystem {
     // This sets how the robot is moving, it has a strafe set.
     // This is in your best interest to understand how the Mecanum wheels work with the strafe
     // This public void drive gives the drive variables used later
-    public void drive(double forward, double strafe, double turn, boolean slowMode) {
-
-        // This slowMode puts the robot in 1/4 speed ratio
-        // If you hold X it turns on the slowMode
-        double speed = slowMode ? 0.25 : 1.0;
+    public void drive(double forward, double strafe, double turn) {
 
         double heading = Math.toRadians(odometry.getHeading());
         double rotatedForward = forward * Math.cos(heading) + strafe * Math.sin(heading);
         double rotatedStrafe = -forward * Math.sin(heading) + strafe * Math.cos(heading);
 
-        double flPower = (rotatedForward + rotatedStrafe + turn) * speed;
-        double frPower = (rotatedForward - rotatedStrafe - turn) * speed;
-        double blPower = (rotatedForward - rotatedStrafe + turn) * speed;
-        double brPower = (rotatedForward + rotatedStrafe - turn) * speed;
+        double flPower = (rotatedForward + rotatedStrafe + turn);
+        double frPower = (rotatedForward - rotatedStrafe - turn);
+        double blPower = (rotatedForward - rotatedStrafe + turn);
+        double brPower = (rotatedForward + rotatedStrafe - turn);
 
         double maxPower = Math.max(
                 1.0,
@@ -79,7 +75,7 @@ public class DriveSubsystem {
 
         // No target tag found
         if (tag == null) {
-            drive(0, 0, 0, false);
+            drive(0, 0, 0);
             return;
         }
 
@@ -120,6 +116,6 @@ public class DriveSubsystem {
         turn = Math.max(-1, Math.min(1, turn));
         forward = Math.max(-1, Math.min(1, forward));
 
-        drive(forward, strafe, turn, false);
+        drive(forward, strafe, turn);
     }
 }

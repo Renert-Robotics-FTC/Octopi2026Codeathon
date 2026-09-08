@@ -71,27 +71,15 @@ public class Teleop extends LinearOpMode {
                 driveSubsystem.drive(
                         forward,
                         strafe,
-                        turn,
-                        gamepad1.x
+                        turn
                 );
             }
 
             // Preset Positions
-            //This ensures that if the right_bumper is pressed, it doesn't follow through with the other arm settings.
-            //This stops it from doing it all at once.
-            if (!gamepad1.right_bumper) {
-
-                if (gamepad1.a) {
-                    Armsubsystem.setTargetPosition(Constants.ArmConstants.ARM_INTAKE_POSITION);
-                }
-
-                if (gamepad1.b) {
-                    Armsubsystem.setTargetPosition(Constants.ArmConstants.ARM_NODE_POSITION);
-                }
-
-                if (gamepad1.y) {
-                    Armsubsystem.setTargetPosition(Constants.ArmConstants.ARM_CORE_POSITION);
-                }
+            if (gamepad1.a) {
+                Armsubsystem.setTargetPosition(
+                        Constants.ArmConstants.ARM_INTAKE_POSITION
+                );
             }
 
             // Left bumper controls the claw
