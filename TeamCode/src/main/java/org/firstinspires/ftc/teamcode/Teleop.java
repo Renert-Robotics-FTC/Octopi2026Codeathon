@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.opencv.core.Core;
 
 @TeleOp(name = "Main TeleOp")
 public class Teleop extends LinearOpMode {
@@ -10,7 +11,7 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        ArmSubsystem Armsubsystem = new ArmSubsystem(hardwareMap);
+        ArmSubsystem armSubsystem = new ArmSubsystem(hardwareMap);
         int selectedTagID = 1;
 
         Odometry odometry = new Odometry();
@@ -20,6 +21,12 @@ public class Teleop extends LinearOpMode {
 
         AprilTagScanner aprilTagScanner = new AprilTagScanner(hardwareMap);
 
+        ClawSubsystem clawSubsystem = new ClawSubsystem(hardwareMap);
+
+        BeamBreakSensor beamBrakeSensor = new BeamBreakSensor(hardwareMap);
+
+        CoreNodeAuto coreNode = new CoreNodeAuto(hardwareMap);
+
         telemetry.addLine("Ready!");
         telemetry.update();
 
@@ -27,6 +34,8 @@ public class Teleop extends LinearOpMode {
 
         boolean clawOpen = false;
         boolean lastLB = false;
+        boolean lastAState = false;
+        boolean lastBState = false;
 
         while (opModeIsActive()) {
 
@@ -37,12 +46,31 @@ public class Teleop extends LinearOpMode {
             double strafe = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            // Preset Positions
+            //calls the code to align to Core and Node, respectively
             if (gamepad1.a) {
-                Armsubsystem.setIntakeTarget();
+                coreNode.alignToCore(1);
+                armSubsystem.setCoreTarget();
+            }
+            if (gamepad1.b) {
+                coreNode.alignToNode(2);
+                armSubsystem.setNodeTarget();
             }
 
-            /* Left bumper controls the claw
+            //beam brake sensor automatically controls intake
+            if (!beamBrakeSensor.getState()){
+                Intake.intakeFlag=false;
+            }
+
+            //automates the shooter when the arm and robot are both aligned
+            if (armSubsystem.getAligned() && coreNode.isAligned() && armSubsystem.getTarget() != 0){
+                Shooter.shooterFlag=true;
+                sleep(1000);
+                Shooter.shooterFlag=false;
+                armSubsystem.setIntakeTarget();
+                Intake.intakeFlag=true;
+            }
+
+            //Left bumper controls the claw
             if (gamepad1.left_bumper && !lastLB) {
 
                 clawOpen = !clawOpen;
@@ -52,12 +80,12 @@ public class Teleop extends LinearOpMode {
                 } else {
                     clawSubsystem.close();
                 }
-            }*/
+            }
 
             lastLB = gamepad1.left_bumper;
 
             // Run the PID every loop
-            Armsubsystem.updatePower();
+            armSubsystem.updatePower();
 
             // Run odometry every loop
             odometry.updateOdometry();
@@ -70,7 +98,7 @@ public class Teleop extends LinearOpMode {
             // Scanning the first tag
             AprilTagDetection tag = aprilTagScanner.getFirstDetection();
 
-            if (tag != null) {
+            /*if (tag != null) {
                 telemetry.addData("AprilTags", aprilTagScanner.getNumberOfDetections());
                 telemetry.addData("Tag ID", aprilTagScanner.getTagID());
                 telemetry.addData("Tag X", aprilTagScanner.getTagX(tag));
@@ -81,7 +109,7 @@ public class Teleop extends LinearOpMode {
                 telemetry.addData("Tag Yaw", aprilTagScanner.getTagYaw());
             } else {
                 telemetry.addData("AprilTag", "No tag detected");
-            }
+            }*/
 
             telemetry.update();
 

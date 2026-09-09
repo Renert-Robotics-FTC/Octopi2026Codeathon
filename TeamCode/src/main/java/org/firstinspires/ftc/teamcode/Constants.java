@@ -26,4 +26,9 @@ public class Constants {
         public static final double BEARING_TOLERANCE = 3.0;
         public static final double DISTANCE_TOLERANCE = 2.0;
     }
+
+    public static final class ClawConstants{
+        public static final double OPEN = 0.8;
+        public static final double CLOSED = 0.2;
+    }
 }

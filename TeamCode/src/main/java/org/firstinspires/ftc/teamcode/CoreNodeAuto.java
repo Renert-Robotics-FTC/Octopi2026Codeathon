@@ -1,60 +1,58 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name = "Core Node Auto")
-public class CoreNodeAuto extends LinearOpMode {
+public class CoreNodeAuto {
 
-    public static boolean aligned;
-    @Override
-    public void runOpMode() {
+    private final ArmSubsystem armSubsystem;
+    private final Odometry odometry;
+    private final DriveSubsystem driveSubsystem;
+    private final AprilTagScanner aprilTagScanner;
 
-        ArmSubsystem Armsubsystem = new ArmSubsystem(hardwareMap);
+    private boolean aligned = false;
 
-        int selectedTagID = 1;
+    public CoreNodeAuto(HardwareMap hardwareMap) {
 
-        Odometry odometry = new Odometry();
+        armSubsystem = new ArmSubsystem(hardwareMap);
+
+        odometry = new Odometry();
         odometry.initializeOdometry(hardwareMap);
 
-        DriveSubsystem driveSubsystem =
-                new DriveSubsystem(hardwareMap, odometry);
+        driveSubsystem = new DriveSubsystem(hardwareMap, odometry);
 
-        AprilTagScanner aprilTagScanner =
-                new AprilTagScanner(hardwareMap);
+        aprilTagScanner = new AprilTagScanner(hardwareMap);
+    }
 
-        telemetry.addLine("Ready!");
-        telemetry.update();
+    public boolean alignToNode(int tagID) {
+        odometry.updateOdometry();
 
-        waitForStart();
+        aligned = driveSubsystem.alignToAprilTag(
+                aprilTagScanner,
+                tagID,
+                Constants.DriveConstants.NODE_DISTANCE
+        );
 
-        while (opModeIsActive()) {
+        return aligned;
+    }
 
-            driveSubsystem.alignToAprilTag(
-                    aprilTagScanner,
-                    1,
-                    Constants.DriveConstants.NODE_DISTANCE
-            );
+    public boolean alignToCore(int tagID) {
+        odometry.updateOdometry();
 
-            odometry.updateOdometry();
+        aligned = driveSubsystem.alignToAprilTag(
+                aprilTagScanner,
+                tagID,
+                Constants.DriveConstants.CORE_DISTANCE
+        );
 
-            telemetry.addData(
-                    "Target Distance",
-                    Constants.DriveConstants.CORE_DISTANCE
-            );
+        return aligned;
+    }
 
-            telemetry.addData(
-                    "AprilTags",
-                    aprilTagScanner.getNumberOfDetections()
-            );
+    public void updateArm() {
+        armSubsystem.updatePower();
+    }
 
-            aligned = driveSubsystem.alignToAprilTag(
-                    aprilTagScanner,
-                    1,
-                    Constants.DriveConstants.NODE_DISTANCE
-            );
-
-            telemetry.update();
-        }
+    public boolean isAligned() {
+        return aligned;
     }
 }

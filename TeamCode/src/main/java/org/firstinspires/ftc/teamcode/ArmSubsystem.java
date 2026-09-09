@@ -6,8 +6,6 @@ public class ArmSubsystem {
     private DcMotor armMotor;
     private double target = 0;
     private final double kP = 0.05;
-
-
     public ArmSubsystem(HardwareMap hardwareMap) {
 
         armMotor = hardwareMap.get(DcMotor.class, "arm");
@@ -35,5 +33,11 @@ public class ArmSubsystem {
     }
     public int getPosition() {
         return armMotor.getCurrentPosition();
+    }
+
+    public boolean getAligned(){
+        if (target==armMotor.getCurrentPosition()){
+            return true;
+        }else{return false;}
     }
 }
