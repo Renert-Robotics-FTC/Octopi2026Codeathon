@@ -14,10 +14,12 @@ public class Constants {
 
     public static final class DriveConstants {
 
-        public static final int NODE_DISTANCE = 67;
-        public static final int CORE_DISTANCE = 76;
+        public static final int NODE_X_COORD =3048;
+        public static final int NODE_Y_COORD=2438;
+        public static final int NODE_DISTANCE=102;
 
-        // AprilTag Auto-Align
+        public static final double CORE_TARGET_HEADING=90;
+
         public static final double STRAFE_KP = 0.03;
         public static final double TURN_KP = 0.02;
         public static final double DRIVE_KP = 0.03;

@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+
+import org.firstinspires.ftc.robotcore.external.Const;
 
 public class DriveSubsystem {
 
@@ -11,6 +12,8 @@ public class DriveSubsystem {
     private DcMotor FL;
     private DcMotor FR;
     private Odometry odometry;
+
+    public static boolean aligned;
 
     public DriveSubsystem(HardwareMap hardwareMap, Odometry odometry) {
 
@@ -65,27 +68,14 @@ public class DriveSubsystem {
         BR.setPower(brPower);
     }
 
-    public boolean alignToAprilTag(
-            AprilTagScanner aprilTagScanner,
-            int targetID,
-            double targetDistance
-    ) {
+    public boolean nodeAlign(){
 
-        AprilTagDetection tag = aprilTagScanner.getTag(targetID);
-
-        // No target tag found
-        if (tag == null) {
-            drive(0, 0, 0);
-            return false;
-        }
-
-        // Get tag information
-        double x = tag.rawPose.x;
-        double y = tag.rawPose.y;
+        double x=odometry.getxPos()-Constants.DriveConstants.NODE_X_COORD;
+        double y=odometry.getyPos()-Constants.DriveConstants.NODE_Y_COORD;
+        double targetDistance=Constants.DriveConstants.NODE_DISTANCE;
 
         double bearing = Math.toDegrees(Math.atan2(-x, y));
 
-        // Distance from camera to tag
         double distance = Math.hypot(x, y);
 
         // Calculate errors
@@ -124,7 +114,7 @@ public class DriveSubsystem {
         turn = Math.max(-1, Math.min(1, turn));
         forward = Math.max(-1, Math.min(1, forward));
 
-        boolean aligned =
+        aligned =
                 Math.abs(strafeError) < Constants.DriveConstants.X_TOLERANCE
                         && Math.abs(turnError) < Constants.DriveConstants.BEARING_TOLERANCE
                         && Math.abs(distanceError) < Constants.DriveConstants.DISTANCE_TOLERANCE;
@@ -138,4 +128,24 @@ public class DriveSubsystem {
 
         return false;
     }
+
+    public boolean coreAlign(){
+        double currentHeading= odometry.getHeading();
+        double headingError = Constants.DriveConstants.CORE_TARGET_HEADING-currentHeading;
+        headingError = ((headingError + 180) % 360 + 360) % 360 - 180;
+
+        aligned=Math.abs(headingError) < Constants.DriveConstants.BEARING_TOLERANCE;
+        if (aligned){
+            drive(0,0,0);
+            return true;
+        }
+
+        double turn = headingError * Constants.DriveConstants.TURN_KP;
+        turn = Math.max(-1, Math.min(1, turn));
+
+        drive(0, 0, turn);
+
+        return false;
+    }
+
 }

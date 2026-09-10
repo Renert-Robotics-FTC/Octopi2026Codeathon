@@ -19,13 +19,10 @@ public class Teleop extends LinearOpMode {
 
         DriveSubsystem driveSubsystem = new DriveSubsystem(hardwareMap, odometry);
 
-        AprilTagScanner aprilTagScanner = new AprilTagScanner(hardwareMap);
-
         ClawSubsystem clawSubsystem = new ClawSubsystem(hardwareMap);
 
         BeamBreakSensor beamBrakeSensor = new BeamBreakSensor(hardwareMap);
 
-        CoreNodeAuto coreNode = new CoreNodeAuto(hardwareMap);
 
         telemetry.addLine("Ready!");
         telemetry.update();
@@ -48,11 +45,11 @@ public class Teleop extends LinearOpMode {
 
             //calls the code to align to Core and Node, respectively
             if (gamepad1.a) {
-                coreNode.alignToCore(1);
+                driveSubsystem.coreAlign();
                 armSubsystem.setCoreTarget();
             }
             if (gamepad1.b) {
-                coreNode.alignToNode(2);
+                driveSubsystem.nodeAlign();
                 armSubsystem.setNodeTarget();
             }
 
@@ -62,7 +59,7 @@ public class Teleop extends LinearOpMode {
             }
 
             //automates the shooter when the arm and robot are both aligned
-            if (armSubsystem.getAligned() && coreNode.isAligned() && armSubsystem.getTarget() != 0){
+            if (armSubsystem.getAligned() && DriveSubsystem.aligned && armSubsystem.getTarget() != 0){
                 Shooter.shooterFlag=true;
                 sleep(1000);
                 Shooter.shooterFlag=false;
@@ -94,22 +91,6 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("X Position", odometry.getxPos());
             telemetry.addData("Y Position", odometry.getyPos());
             telemetry.addData("Heading", odometry.getHeading());
-
-            // Scanning the first tag
-            AprilTagDetection tag = aprilTagScanner.getFirstDetection();
-
-            /*if (tag != null) {
-                telemetry.addData("AprilTags", aprilTagScanner.getNumberOfDetections());
-                telemetry.addData("Tag ID", aprilTagScanner.getTagID());
-                telemetry.addData("Tag X", aprilTagScanner.getTagX(tag));
-                telemetry.addData("Tag Y", aprilTagScanner.getTagY(tag));
-                telemetry.addData("Tag Z", aprilTagScanner.getTagZ(tag));
-                telemetry.addData("Tag Range", aprilTagScanner.getTagRange(tag));
-                telemetry.addData("Tag Bearing", aprilTagScanner.getTagBearing(tag));
-                telemetry.addData("Tag Yaw", aprilTagScanner.getTagYaw());
-            } else {
-                telemetry.addData("AprilTag", "No tag detected");
-            }*/
 
             telemetry.update();
 

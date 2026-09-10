@@ -16,6 +16,7 @@ public class ArmSubsystem {
     public void setIntakeTarget() {
         target = Constants.ArmConstants.ARM_INTAKE_POSITION;
     }
+
     public void setCoreTarget() {
         target = Constants.ArmConstants.ARM_CORE_POSITION;
     }
